@@ -1,0 +1,30 @@
+%{
+#include <stdio.h>
+int flag = 0;
+%}
+
+%%
+[a-z.0-9]+@[a-z]+(.com|.in) { flag = 1; }
+.|\n  ;  // Ignore other characters
+%%
+
+int main() {
+    char email[100];  // Assuming a maximum of 100 characters for the email
+    printf("Enter an email address: ");
+    scanf("%s", email);  // Read the email address from the user
+
+    // Feed the input to the lexer
+    yy_scan_string(email);
+    yylex();
+
+    if (flag == 1)
+        printf("Accepted\n");
+    else
+        printf("Not Accepted\n");
+    
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
